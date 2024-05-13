@@ -1,0 +1,20 @@
+{{-- <h1>Judul Film : {{ $film->judul }}</h1>
+<h1>Deskripsi Film : {{ $film->deskripsi }}</h1>
+<span>
+    <h3>Kode Film : {{ $film->DetailFilm->code_film}}</h3>
+    <h3>Url Film : <a href="{{ $film->DetailFilm->url_imdb }}" target="_blank">Klik Disini</a></h3>
+</span>
+{{-- end one to one
+
+start one to many
+@foreach ($film->MediaFilm as $item)
+<p>Media Title : {{ $item->media_title }}</p>
+<p>Url_Media : {{ $item->url_media }}</p>
+@if ($item->media_type)
+Url Media : <a href="{{ $item->url_media }}">Klik Disinii</a>
+@else
+<img src="{{ $item->url_media }}" alt="" height="200">
+@endif
+<hr>
+@endforeach
+end one to many --}}
