@@ -25,4 +25,9 @@ class MovieController extends Controller
         return view('movie.show', compact('movie'));
     }
 
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
 }

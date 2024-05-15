@@ -6,6 +6,7 @@ use App\Models\Sekolah;
 use App\Models\Film;
 use App\Http\Controllers\MyController;
 use App\Http\Controllers\MovieController;
+use App\Http\Controllers\PenulisController;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,3 +57,16 @@ Route::get('hewan',[App\Http\Controllers\MyController::class,'animals']);
 //route movie
 Route::get('movie', [MovieController::class, 'getMovie']);
 Route::get('movie/{id}', [MovieController::class, 'getMovieById']);
+
+//route artikel
+Route::get('artikel', [App\Http\Controllers\ArtikelController::class, 'getArtikel']);
+Route::get('artikel/{id}', [App\Http\Controllers\ArtikelController::class, 'getArtikelById']);
+Route::get('artikel/kategori/{kategori}', [App\Http\Controllers\ArtikelController::class, 'getArtikelByKategori']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// route crud
+
+Route::resource('penulis', PenulisController::class);

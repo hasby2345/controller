@@ -9,12 +9,22 @@
                         tidbits. Then, link them off to some social networking sites or contact information.</p>
                 </div>
                 <div class="col-sm-4 offset-md-1 py-4">
-                    <h4 class="text-white">Contact</h4>
+                    @guest
+                    <h4 class="text-white">Login / Register</h4>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="text-white">Follow on Twitter</a></li>
-                        <li><a href="#" class="text-white">Like on Facebook</a></li>
-                        <li><a href="#" class="text-white">Email me</a></li>
+                        <li><a href="{{url('login')}}" class="text-white">Login</a></li>
+                        <li><a href="{{url('register')}}" class="text-white">Register</a></li>
                     </ul>
+                    @else
+                    <h4 class="text-white" style="color: white;">{{Auth::user()->name}}</h4>
+                    <ul class="list-unstyled">
+                        <li><a href="{{url('logout')}}" class="text-white" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
+                         {{-- form untuk logout --}}
+                         <form action="{{route('logout')}}" method="POST" id="logout-form">
+                            @csrf
+                        </form>
+                    </ul>
+                    @endguest
                 </div>
             </div>
         </div>
@@ -28,7 +38,7 @@
                     <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z" />
                     <circle cx="12" cy="13" r="4" />
                 </svg>
-                <strong>Film</strong>
+                <strong>MCD</strong>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader"
                 aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
