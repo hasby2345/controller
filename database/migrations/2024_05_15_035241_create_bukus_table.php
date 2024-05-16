@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('bukus', function (Blueprint $table) {
             $table->id();
             $table->string('nama_judul')->unique();
+            $table->string('isbn');
             $table->text('deskripsi');
             $table->integer('jml_halaman');
             $table->string('cover');

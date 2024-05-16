@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Buku;
-use App\Http\Requests\StoreBukuRequest;
-use App\Http\Requests\UpdateBukuRequest;
+use Illuminate\Http\Request;
+use App\Models\Penulis;
+use App\Models\Genre;
 
 class BukuController extends Controller
 {
@@ -15,7 +16,8 @@ class BukuController extends Controller
      */
     public function index()
     {
-        //
+        $buku = Buku::latest()->get();
+        return view('buku.index', compact('buku'));
     }
 
     /**
@@ -25,7 +27,9 @@ class BukuController extends Controller
      */
     public function create()
     {
-        //
+        $penulis = Penulis::all();
+        $genre = Genre::all();
+        return view('buku.create', compact('penulis', 'genre'));
     }
 
     /**
@@ -34,9 +38,39 @@ class BukuController extends Controller
      * @param  \App\Http\Requests\StoreBukuRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreBukuRequest $request)
+    public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'nama_judul'=>'required|unique:bukus',
+            'isbn'=>'required',
+            'jml_halaman'=>'required|numeric',
+            'cover'=>'required|max:2048|mimes:png,jpg',
+            'deskripsi'=>'required',
+            'tgl_terbit'=>'required',
+            'id_penulis'=>'required',
+        ]);
+
+        $buku = new Buku();
+        $buku->nama_judul = $request->nama_judul;
+        $buku->isbn = $request->isbn;
+        $buku->jml_halaman = $request->jml_halaman;
+        $buku->deskripsi = $request->deskripsi;
+        $buku->id_penulis = $request->id_penulis;
+        $buku->tgl_terbit = $request->tgl_terbit;
+
+        //upload foto
+        if($request->hasFile('cover')){
+            $img = $request->file('cover');
+            $name = rand(1000, 9999) . $img->getClientOriginalName();
+            $img ->move('images/buku/', $name);
+            $buku->cover = $name;
+        }
+
+        $buku->save();
+        //lampiran banyak genre di buku
+        $buku->genre()->attach($request->genre);
+        return redirect()->route('buku.index')
+            ->with('success', 'data berhasil ditambahkan');
     }
 
     /**
@@ -45,9 +79,10 @@ class BukuController extends Controller
      * @param  \App\Models\Buku  $buku
      * @return \Illuminate\Http\Response
      */
-    public function show(Buku $buku)
+    public function show($id)
     {
-        //
+        $buku = Buku::FindOrFail($id);
+        return view('buku.show', compact('buku'));
     }
 
     /**
@@ -56,9 +91,13 @@ class BukuController extends Controller
      * @param  \App\Models\Buku  $buku
      * @return \Illuminate\Http\Response
      */
-    public function edit(Buku $buku)
+    public function edit($id)
     {
-        //
+        $buku = Buku::FindOrFail($id);
+        $genre = Genre::all();
+        $penulis = Penulis::all();
+        $selectGenre = Genre::with('buku')->pluck('id')->toArray();
+        return view('buku.edit', compact('buku', 'genre', 'penulis', 'selectGenre'));
     }
 
     /**
@@ -68,9 +107,40 @@ class BukuController extends Controller
      * @param  \App\Models\Buku  $buku
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateBukuRequest $request, Buku $buku)
+    public function update(Request $request, $id)
     {
-        //
+        $validated = $request->validate([
+            'nama_judul'=>'required',
+            'isbn'=>'required',
+            'jml_halaman'=>'required|numeric',
+            // 'cover'=>'required|max:204kb|mimes:png,jpg',
+            'deskripsi'=>'required',
+            'tgl_terbit'=>'required',
+            'id_penulis'=>'required',
+        ]);
+
+        $buku = Buku::FindOrFail($id);
+        $buku->nama_judul = $request->nama_judul;
+        $buku->isbn = $request->isbn;
+        $buku->jml_halaman = $request->jml_halaman;
+        $buku->deskripsi = $request->deskripsi;
+        $buku->tgl_terbit = $request->tgl_terbit;
+        $buku->id_penulis = $request->id_penulis;
+
+        //upload foto
+        if($request->hasFile('cover')){
+            $buku->deleteImage(); // untuk hapus data sebelum di edit
+            $img = $request->file('cover');
+            $name = rand(1000, 9999) . img->getClientOriginalName();
+            $img ->move('images/buku/', $name);
+            $buku->cover = $name;
+        }
+
+        $buku->save();
+        //lampiran banyak genre di buku
+        $buku->genre()->sync($request->genre);
+        return redirect()->route('buku.index')
+            ->with('success', 'data berhasil diperbaharui');
     }
 
     /**
@@ -79,8 +149,13 @@ class BukuController extends Controller
      * @param  \App\Models\Buku  $buku
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Buku $buku)
+    public function destroy($id)
     {
-        //
+        $buku = Buku::FindOrFail($id);
+        $buku->deleteImage();
+        $buku->delete();
+        $buku->genre()->detach();
+        return redirect()->route('buku.index')
+            ->with('success', 'data berhasil dihapus');
     }
 }
