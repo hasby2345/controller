@@ -1,0 +1,46 @@
+@extends('layout.layout')
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card-md-8">
+            <div class="card">
+                <div class="card-header">Data Buku
+                </div>
+                <div class="card-body">
+                    <div class="mb-2">
+                        <label for="">Judul Buku</label>
+                        <b>{{$buku->nama_judul}}</b>
+                    </div>
+                    <div class="mb-2">
+                        <img src="{{ asset('/images/buku/' . $buku->cover) }}" alt="" style="width: 200px">
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Penulis</label>
+                        <b>{{$buku->penulis->nama_penulis}}</b>
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Tanggal Terbit</label>
+                        <b>{{ date('d-M-Y', strtotime($buku->tgl_terbit) )}}</b>
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Jumlah Halaman</label>
+                        <b>{{ $buku->jml_halaman}}</b>
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Genre :</label>
+                        <ol>
+                            @foreach ($buku->genre as $genre)
+                            <li>{{$genre->nama_genre}}</li>
+                            @endforeach
+                        </ol>
+                    </div>
+                    <div class="mb-2">
+                        <label for="">Deskripsi Buku</label>
+                        <p>{{ $buku->deskripsi }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

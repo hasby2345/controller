@@ -8,13 +8,14 @@
                     {{session('success')}}
                 </div>
                 @endif
-                <div class="card">
+                <div class="card ">
                     <div class="card-header"> Data Buku
                         <a href="{{route('buku.create')}}" class="btn btn-sm btn-primary" style="float: right">Tambah</a>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
-                            <table class="table table-bordered">
+                            <table class="table table-bordered" id="datatable">
+                                <thead>
                                 <tr>
                                     <th class="col-md-1">No</th>
                                     <th class="col-md-2">Nama Buku</th>
@@ -22,7 +23,9 @@
                                     <th class="col-md-2">Cover</th>
                                     <th class="col-md-3">Aksi</th>
                                 </tr>
+                                </thead>
                                 @php $no = 1; @endphp
+                                <tbody>
                                 @foreach ($buku as $item)
                                 <tr>
                                     <td>{{$no++}}</td>
@@ -40,6 +43,7 @@
                                     </td>
                                 </tr>
                                 @endforeach
+                            </tbody>
                             </table>
                         </div>
                     </div>

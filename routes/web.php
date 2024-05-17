@@ -5,6 +5,7 @@ use App\Models\Siswa;
 use App\Models\Sekolah;
 use App\Models\Film;
 use App\Http\Controllers\MyController;
+use App\Http\Controllers\FrontController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\PenulisController;
 use App\Http\Controllers\GenreController;
@@ -20,9 +21,7 @@ use App\Http\Controllers\BukuController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/biodata', function () {
     $nama = "Hasby";
@@ -68,10 +67,14 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// route crud
+// route admin
+Route::group(['prefix'=>'admin', 'middleware'=>['auth']],function(){
+    Route::resource('penulis', PenulisController::class);
+    Route::resource('genre', GenreController::class);
+    Route::resource('buku', BukuController::class);
+});
 
-Route::resource('penulis', PenulisController::class);
+// route guest(tamu / pengunjung)
 
-Route::resource('genre', GenreController::class);
-
-Route::resource('buku', BukuController::class);
+Route::get('/',[FrontController::class,'buku']);
+Route::get('buku/{id}',[FrontController::class,'detailBuku']);

@@ -13,15 +13,18 @@
                         <a href="{{route('penulis.create')}}" class="btn btn-sm btn-primary" style="float: right">Tambah</a>
                     </div>
                     <div class="card-body">
-                        <div class="table">
-                            <table class="table-responsive">
-                                <tr>
-                                    <th class="col-md-1">No</th>
-                                    <th class="col-md-2">Nama Penulis</th>
-                                    <th class="col-md-3">Aksi</th>
-                                </tr>
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="datatable">
+                                <thead>
+                                    <tr>
+                                        <th class="col-md-1">No</th>
+                                        <th class="col-md-2">Nama Penulis</th>
+                                        <th class="col-md-3">Aksi</th>
+                                    </tr>
+                                </thead>
                                 @php $no = 1; @endphp
-                                @foreach ($penulis as $item)
+                                <tbody>
+                                    @foreach ($penulis as $item)
                                 <tr>
                                     <td>{{$no++}}</td>
                                     <td>{{$item->nama_penulis}}</td>
@@ -41,6 +44,8 @@
                                     </td>
                                 </tr>
                                 @endforeach
+                                </tbody>
+
                             </table>
                         </div>
                     </div>
